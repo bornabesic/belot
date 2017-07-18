@@ -2,7 +2,7 @@ from interfaces import IPlayer
 from enum import Enum
 import belot
 
-class CardStatus(Enum):
+class CardState(Enum):
     UNKNOWN = 0
     AVAILABLE = 1
     TABLE = 2
@@ -16,11 +16,11 @@ class PlayerRL(IPlayer):
         self.knowledge = dict()
 
         # inicijalno sve karte stavi u stanje UNKNOWN
-        self.knowledge[CardStatus.UNKNOWN]=set(belot.cards)
+        self.knowledge[CardState.UNKNOWN]=set(belot.cards)
 
         for player in [belot.PlayerRole.LEFT_OPPONENT, belot.PlayerRole.TEAMMATE, belot.PlayerRole.RIGHT_OPPONENT]:
             self.knowledge[player] = dict()
-            for cardStatus in [CardStatus.AVAILABLE, CardStatus.UNAVAILABLE, CardStatus.TABLE]:
+            for cardStatus in [CardState.AVAILABLE, CardState.UNAVAILABLE, CardState.TABLE]:
                 self.knowledge[player][cardStatus]=set()
 
     def notifyDeclarations(self, declarations):
@@ -31,8 +31,8 @@ class PlayerRL(IPlayer):
             if player!=belot.PlayerRole.ME:
                 for declaredSet in declarations[player]:
                     for card in declaredSet:
-                        knowledge[CardStatus.UNKNOWN].remove(card)
-                        knowledge[player][CardStatus.AVAILABLE].add(card)
+                        knowledge[CardState.UNKNOWN].remove(card)
+                        knowledge[player][CardState.AVAILABLE].add(card)
 
     def playCard(self, table, legalCards):
         knowledge = self.knowledge
@@ -41,13 +41,13 @@ class PlayerRL(IPlayer):
         for player in table:
             card = player[table]
 
-            if card in knowledge[player][CardStatus.AVAILABLE]:
-                knowledge[player][CardStatus.AVAILABLE].remove(card)
-            elif card in knowledge[CardStatus.UNKNOWN]:
-                knowledge[CardStatus.UNKNOWN].remove(card)
+            if card in knowledge[player][CardState.AVAILABLE]:
+                knowledge[player][CardState.AVAILABLE].remove(card)
+            elif card in knowledge[CardState.UNKNOWN]:
+                knowledge[CardState.UNKNOWN].remove(card)
 
-            knowledge[player][CardStatus.TABLE].clear()
-            knowledge[player][CardStatus.TABLE].add(card)
+            knowledge[player][CardState.TABLE].clear()
+            knowledge[player][CardState.TABLE].add(card)
 
         # odredi potez na temelju cijelog stanja igre
         # TODO playing policy network
@@ -55,10 +55,10 @@ class PlayerRL(IPlayer):
 
         # sve karte iz stanja TABLE prebaci u UNAVAILABLE
         for player in table:
-            knowledgeTableCopy = set(knowledge[player][CardStatus.TABLE])
+            knowledgeTableCopy = set(knowledge[player][CardState.TABLE])
             for card in knowledgeTableCopy:
-                knowledge[player][CardStatus.TABLE].remove(card)
-                knowledge[player][CardStatus.UNAVAILABLE].add(card)
+                knowledge[player][CardState.TABLE].remove(card)
+                knowledge[player][CardState.UNAVAILABLE].add(card)
 
         return cardToPlay
 
