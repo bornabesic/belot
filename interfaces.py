@@ -74,10 +74,10 @@ class IPlayer(metaclass=ABCMeta):
         'declarations' je rječnik (dict) kojemu je ključ igrač,
         a vrijednost lista (list) skupova (set) karata koje čine zvanje.
         Ključevi:
-        - belot.me -> ja
-        - belot.leftOpponent -> protivnik s lijeva
-        - belot.rightOpponent -> protivnik s desna
-        - belot.teammate -> suigrač
+        - belot.PlayerRole.ME -> ja
+        - belot.PlayerRole.LEFT_OPPONENT -> protivnik s lijeva
+        - belot.PlayerRole.RIGHT_OPPONENT -> protivnik s desna
+        - belot.PlayerRole.TEAMMATE -> suigrač
         '''
         pass
 
@@ -123,9 +123,9 @@ class IPlayer(metaclass=ABCMeta):
         'table' je riječnik (dict) koji predstavlja stanje karata na stolu. Ključ je
         igrač, a vrijednost je karta koju je taj igrač bacio.
         Ključevi:
-        - belot.leftOpponent -> protivnik s lijeva
-        - belot.rightOpponent -> protivnik s desna
-        - belot.teammate -> suigrač
+        - belot.PlayerRole.LEFT_OPPONENT -> protivnik s lijeva
+        - belot.PlayerRole.RIGHT_OPPONENT -> protivnik s desna
+        - belot.PlayerRole.TEAMMATE -> suigrač
         '''
         return None
 
@@ -136,8 +136,8 @@ class IPlayer(metaclass=ABCMeta):
         'table' je riječnik (dict) koji predstavlja stanje karata na stolu. Ključ je
         igrač, a vrijednost je karta koju je taj igrač bacio.
         Ključevi:
-        - belot.leftOpponent -> protivnik s lijeva
-        - belot.rightOpponent -> protivnik s desna
-        - belot.teammate -> suigrač
+        - belot.PlayerRole.LEFT_OPPONENT -> protivnik s lijeva
+        - belot.PlayerRole.RIGHT_OPPONENT -> protivnik s desna
+        - belot.PlayerRole.TEAMMATE -> suigrač
         '''
         return False

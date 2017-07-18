@@ -1,10 +1,13 @@
 from random import sample, shuffle
+from enum import Enum
 
 # ključevi za lokalne riječnike
-leftOpponent=-1
-rightOpponent=1
-teammate=0
-me=None
+class PlayerRole(Enum):
+    ME = 0
+    RIGHT_OPPONENT = 1
+    TEAMMATE = 2
+    LEFT_OPPONENT = 3
+
 
 belaValue=20
 lastTrickValue=10

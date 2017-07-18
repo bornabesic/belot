@@ -62,10 +62,10 @@ class Hand:
         for player in self.game.sitting:
             self.mapTableToLocal[player]=dict()
             self.setCurrentPlayer(player)
-            self.mapTableToLocal[player][player]=belot.me
-            self.mapTableToLocal[player][self.whoWasPreviousPlayer()]=belot.leftOpponent
-            self.mapTableToLocal[player][self.whoIsNextPlayer()]=belot.rightOpponent
-            self.mapTableToLocal[player][self.getTeammate(player)]=belot.teammate
+            self.mapTableToLocal[player][player]=belot.PlayerRole.ME
+            self.mapTableToLocal[player][self.whoWasPreviousPlayer()]=belot.PlayerRole.LEFT_OPPONENT
+            self.mapTableToLocal[player][self.whoIsNextPlayer()]=belot.PlayerRole.RIGHT_OPPONENT
+            self.mapTableToLocal[player][self.getTeammate(player)]=belot.PlayerRole.TEAMMATE
 
         self.currentPlayer=None
         self.resetToFirstPlayer()

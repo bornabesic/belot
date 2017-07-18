@@ -18,7 +18,7 @@ class PlayerRL(IPlayer):
         # inicijalno sve karte stavi u stanje UNKNOWN
         self.knowledge[CardStatus.UNKNOWN]=set(belot.cards)
 
-        for player in [belot.leftOpponent, belot.teammate, belot.rightOpponent]:
+        for player in [belot.PlayerRole.LEFT_OPPONENT, belot.PlayerRole.TEAMMATE, belot.PlayerRole.RIGHT_OPPONENT]:
             self.knowledge[player] = dict()
             for cardStatus in [CardStatus.AVAILABLE, CardStatus.UNAVAILABLE, CardStatus.TABLE]:
                 self.knowledge[player][cardStatus]=set()
@@ -28,7 +28,7 @@ class PlayerRL(IPlayer):
 
         # sve karte poznate iz zvanja prebaci u stanje AVAILABLE
         for player in declarations:
-            if player!=belot.me:
+            if player!=belot.PlayerRole.ME:
                 for declaredSet in declarations[player]:
                     for card in declaredSet:
                         knowledge[CardStatus.UNKNOWN].remove(card)
