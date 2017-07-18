@@ -134,12 +134,18 @@ class Hand:
                 if self.currentPlayer in pairA: biddingPair=pairA
                 elif self.currentPlayer in pairB: biddingPair=pairB
                 trumpSuit = suit
+                bidder = self.currentPlayer
                 break
             else:
                 if must: raise ValueError("{} nije zvao na mus!".format(self.currentPlayer))
 
                 print(self.currentPlayer, "kaže dalje")
             self.nextPlayer()
+
+
+        for player in self.game.sitting:
+            localBidder = self.mapTableToLocal[player][bidder]
+            player.notifyTrumpSuit(trumpSuit, localBidder)
 
         self.resetToFirstPlayer() # igra prvi igrač desno od djelitelja
 

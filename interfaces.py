@@ -9,6 +9,7 @@ class IPlayer(metaclass=ABCMeta):
     def __init__(self, name, human=False):
         self.name=name
         self.human=human
+        self.initialize()
 
     def __eq__(self, other):
         if other==None:
@@ -31,6 +32,7 @@ class IPlayer(metaclass=ABCMeta):
         '''
 
         self.cards=sorted(cards)
+        self.notifyCards()
 
     def declare(self):
         '''
@@ -66,6 +68,34 @@ class IPlayer(metaclass=ABCMeta):
                 uniqueValues.append(foundValues[i])
 
         return uniqueDeclarations, uniqueValues
+
+    @abstractmethod
+    def initialize(self):
+        '''
+        Metoda koja služi za inicijalizaciju svih potrebnih atributa.
+        '''
+        pass
+
+    @abstractmethod
+    def notifyCards(self):
+        '''
+        Metoda koja dojavljuje da su karte podijeljene i da se nalaze
+        u self.cards.
+        '''
+        pass
+
+    @abstractmethod
+    def notifyTrumpSuit(self, trumpSuit, bidder):
+        '''
+        Metoda koja dojavljuje koja boja je zvana kao adut (trumpSuit) te koji igrač ju je zvao (bidder).
+        trumpSuit je jedna od vrijednosti iz belot.suits.
+        bidder je jedna od vrijednosti belot.PlayerRole:
+        - belot.PlayerRole.ME -> ja
+        - belot.PlayerRole.LEFT_OPPONENT -> protivnik s lijeva
+        - belot.PlayerRole.RIGHT_OPPONENT -> protivnik s desna
+        - belot.PlayerRole.TEAMMATE -> suigrač
+        '''
+        pass
 
     @abstractmethod
     def notifyDeclarations(self, declarations):

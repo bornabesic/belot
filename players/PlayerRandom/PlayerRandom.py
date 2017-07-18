@@ -5,6 +5,16 @@ from interfaces import IPlayer
 
 
 class PlayerRandom(IPlayer):
+
+    def initialize(self):
+        pass
+
+    def notifyCards(self):
+        pass
+
+    def notifyTrumpSuit(self, trumpSuit, bidder):
+        pass
+
     def notifyDeclarations(self, declarations):
         pass
 
