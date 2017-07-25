@@ -62,7 +62,7 @@ class PlayingPolicyNetwork:
         return loss
 
     def feed(self, state, legalCards):
-        legalMask = np.array([[True if card in legalCards else False for card in cards]])
+        legalMask = np.array([[True if card in legalCards else False for card in cards]]*len(state))
 
         output, index = self.session.run([self.output, self.index], feed_dict={self.statePlaceholder: state, self.legalMaskPlaceholder: legalMask})
         return output[0], index[0]

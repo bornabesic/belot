@@ -134,18 +134,20 @@ class PlayerRL(IPlayer):
                 self.knowledge[player][cardStatus] = set()
 
     def notifyTrick(self, cards, value):
-        normalizedReward = value/56 * (1 if value>=0 else -1)
+        normalizedReward = value/56
         self.playingRewards.append(normalizedReward)
 
     def notifyGame(self, pointsUs, pointsThem):
         # treniraj mrežu za bacanje karata
         discountedRewards = list()
-        reversedRewards = list(reversed(self.playingRewards))
-        for i in range(len(reversedRewards)):
-            rewardsToSum = reversedRewards[i:]
+        numRewards = len(self.playingRewards)
+        for i in range(numRewards):
             realReward = 0
-            for j, reward in enumerate(rewardsToSum):
-                realReward+=reward*pow(self.playingDiscount, j)
+
+            for j in range(i, numRewards):
+                reward = self.playingRewards[j]
+                realReward += reward * pow(self.playingDiscount, j-i)
+
             discountedRewards.append(realReward)
 
         playingLoss = self.playingNetwork.train(

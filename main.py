@@ -28,7 +28,7 @@ for i in range(games):
     pointsA, pointsB = game.play()
     wins.append("A" if pointsA>pointsB else "B")
 
-last=25
+last=50
 winningPercentage=wins[-last:].count("A")/last*100
 
 stdout.enable()
