@@ -129,6 +129,14 @@ class IPlayer(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def notifyGame(self, pointsUs, pointsThem):
+        '''
+        Metoda dojavljuje kraj igre.
+        'pointsUs' su zarađeni bodovi vlastite ekipe, a 'pointsThem' su zarađeni bodovi protivničke ekipe.
+        '''
+        pass
+
+    @abstractmethod
     def notifyBela(self, player, card):
         '''
         Metoda dojavljuje kada neki igrač zove belu.

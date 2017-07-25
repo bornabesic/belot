@@ -2,15 +2,34 @@
 
 from model import *
 from players.PlayerRandom import PlayerRandom
-from players.PlayerKeyboard import PlayerKeyboard
+#from players.PlayerKeyboard import PlayerKeyboard
+from players.PlayerRL import PlayerRL
 
-playerA1 = PlayerKeyboard("Borna", human=True)
-playerA2 = PlayerRandom("Mislav")
+import stdout
+
+# reinforcement learning pair
+# TODO save & load policy networks
+# TODO share policy networks across all RL players
+playerA1 = PlayerRL("Borna")
+playerA2 = PlayerRL("Mislav")
 pairA = Pair(playerA1, playerA2)
 
+# random pair
 playerB1 = PlayerRandom("Luka")
 playerB2 = PlayerRandom("Lovro")
 pairB = Pair(playerB1, playerB2)
 
-game = Game(pairA, pairB)
-game.play()
+stdout.disable()
+
+games = 1000
+wins=list()
+for i in range(games):
+    game = Game(pairA, pairB)
+    pointsA, pointsB = game.play()
+    wins.append("A" if pointsA>pointsB else "B")
+
+last=25
+winningPercentage=wins[-last:].count("A")/last*100
+
+stdout.enable()
+print("[RL] {} - postotak pobjeda (u zadnjih {} igara): {}%".format(pairA, last, winningPercentage))

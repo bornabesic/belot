@@ -21,6 +21,9 @@ class PlayerKeyboard(IPlayer):
     def notifyHand(self, pointsUs, pointsThem):
         pass
 
+    def notifyGame(self, pointsUs, pointsThem):
+        pass
+
     def notifyBela(self, player, card):
         pass
 

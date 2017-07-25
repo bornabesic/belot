@@ -1,8 +1,11 @@
 from interfaces import IPlayer
 from enum import Enum
 import belot
+from players.PlayerRL.BiddingPolicyNetwork import BiddingPolicyNetwork
+from players.PlayerRL.PlayingPolicyNetwork import PlayingPolicyNetwork
 
 import numpy as np
+from math import pow
 
 class CardState(Enum):
     UNKNOWN = 0
@@ -13,6 +16,24 @@ class CardState(Enum):
 class PlayerRL(IPlayer):
 
     def initialize(self):
+        # stanja i odgovarajuće nagrade
+        # za neuronsku mrežu koja određuje slijedeću kartu
+        self.playingActions = list()
+        self.playingStates = list()
+        self.playingRewards = list()
+
+        self.playingDiscount = 0.99
+        self.playingReward=0
+        self.trickNumber=0
+
+        self.playingNetwork = PlayingPolicyNetwork(name=self.name)
+        # za neuronsku mrežu koja određuje zvanje aduta
+        self.biddingActions = list()
+        self.biddingStates = list()
+        self.biddingRewards = list()
+
+        self.biddingNetwork = BiddingPolicyNetwork(name=self.name)
+
         # odigrane karte
         self.playedCards = set()
 
@@ -41,16 +62,15 @@ class PlayerRL(IPlayer):
         for player in declarations:
             if player!=belot.PlayerRole.ME:
                 for declaredSet in declarations[player]:
-                    for card in declaredSet:
-                        knowledge[CardState.UNKNOWN].remove(card)
-                        knowledge[player][CardState.AVAILABLE].add(card)
+                    knowledge[CardState.UNKNOWN]-=declaredSet
+                    knowledge[player][CardState.AVAILABLE]|=declaredSet
 
     def playCard(self, table, legalCards):
         knowledge = self.knowledge
 
         # karte na stolu prebaci u stanje TABLE
         for player in table:
-            card = player[table]
+            card = table[player]
 
             if card in knowledge[player][CardState.AVAILABLE]:
                 knowledge[player][CardState.AVAILABLE].remove(card)
@@ -60,9 +80,16 @@ class PlayerRL(IPlayer):
             knowledge[player][CardState.TABLE].clear()
             knowledge[player][CardState.TABLE].add(card)
 
-        # odredi potez na temelju cijelog stanja igre
-        # TODO playing policy network
-        cardToPlay = None
+        # playing policy network
+        playingState = self.playingState()
+        self.playingStates.append(playingState)
+
+        probabilities, maxIndex = self.playingNetwork.feed(np.array([playingState]), np.array([legalCards]))
+
+        sampledActionProbability = np.random.choice(probabilities, p=probabilities)
+        index = np.argmax(probabilities == sampledActionProbability)
+        cardToPlay = belot.cards[index]
+        self.playingActions.append(index)
 
         # sve karte iz stanja TABLE prebaci u UNAVAILABLE
         for player in table:
@@ -75,27 +102,87 @@ class PlayerRL(IPlayer):
         return cardToPlay
 
     def bid(self, must):
-        # TODO bidding policy network
-        choice = None
+        # bidding policy network
+        biddingState = self.biddingState()
+        self.biddingStates.append(biddingState)
 
-        return choice
+        options = belot.suits+[None]
+        probabilities, maxIndex = self.biddingNetwork.feed(biddingState, must)
+
+        sampledActionProbability = np.random.choice(probabilities, p=probabilities)
+        index = np.argmax(probabilities == sampledActionProbability)
+
+        self.biddingActions.append(index)
+
+        return options[index]
 
     def notifyHand(self, pointsUs, pointsThem):
+        if len(self.biddingActions)==len(self.biddingRewards)+1:
+            normalizedReward=pointsUs/81-1
+            self.biddingRewards.append(normalizedReward)
+
+        # resetiraj
+        self.playedCards.clear()
+
+        # inicijalno sve karte stavi u stanje UNKNOWN
         self.knowledge.clear()
+        self.knowledge[CardState.UNKNOWN] = set(belot.cards)
+
+        for player in [belot.PlayerRole.LEFT_OPPONENT, belot.PlayerRole.TEAMMATE, belot.PlayerRole.RIGHT_OPPONENT]:
+            self.knowledge[player] = dict()
+            for cardStatus in [CardState.AVAILABLE, CardState.UNAVAILABLE, CardState.TABLE]:
+                self.knowledge[player][cardStatus] = set()
 
     def notifyTrick(self, cards, value):
-        pass
+        normalizedReward = value/56 * (1 if value>=0 else -1)
+        self.playingRewards.append(normalizedReward)
+
+    def notifyGame(self, pointsUs, pointsThem):
+        # treniraj mrežu za bacanje karata
+        discountedRewards = list()
+        reversedRewards = list(reversed(self.playingRewards))
+        for i in range(len(reversedRewards)):
+            rewardsToSum = reversedRewards[i:]
+            realReward = 0
+            for j, reward in enumerate(rewardsToSum):
+                realReward+=reward*pow(self.playingDiscount, j)
+            discountedRewards.append(realReward)
+
+        playingLoss = self.playingNetwork.train(
+            action=np.array(self.playingActions),
+            state=np.array(self.playingStates),
+            reward=np.array(discountedRewards)
+        )
+        #print("Playing loss:", playingLoss)
+
+        # treniraj mrežu za zvanje aduta
+        if len(self.biddingStates)>0:
+            biddingLoss = self.biddingNetwork.train(
+                action=np.array(self.biddingActions),
+                state=np.array(self.biddingStates)[0],
+                reward=np.array(self.biddingRewards)
+            )
+            #print("Bidding loss:", biddingLoss)
+
+        # resetiraj
+        self.playingActions.clear()
+        self.playingStates.clear()
+        self.playingRewards.clear()
+
+        self.biddingActions.clear()
+        self.biddingStates.clear()
+        self.biddingRewards.clear()
 
     def notifyBela(self, player, card):
         pass
 
     def declareBela(self, table):
         # TODO bela declaring policy network
-        choice = None
+        choice = True
 
         return choice
 
-    def currentGameState(self):
+    def playingState(self):
         knowledge = self.knowledge
         cardStates = [CardState.AVAILABLE, CardState.TABLE, CardState.UNAVAILABLE]
 
@@ -149,7 +236,7 @@ class PlayerRL(IPlayer):
         )
         bidderState[0][list(belot.PlayerRole).index(self.bidder)]=1
 
-        gameState = np.concatenate([
+        playingInput = np.concatenate([
             meState.flatten(),
             rightOpponentState.flatten(),
             teammateState.flatten(),
@@ -157,4 +244,16 @@ class PlayerRL(IPlayer):
             trumpState.flatten(),
             bidderState.flatten()
         ], axis=0)
-        return gameState
+
+        return playingInput
+
+    def biddingState(self):
+        biddingInput = np.zeros(
+            shape=(1, len(belot.cards)),
+            dtype=np.float32
+        )
+        for card in self.cards:
+            j = belot.cards.index(card)
+            biddingInput[0][j]=1
+
+        return biddingInput

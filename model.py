@@ -371,9 +371,15 @@ class Game:
                 winB=True
                 break
 
-        if winA:
-            print("{} su pobjedili!".format(self.pairA))
-        elif winB:
-            print("{} su pobjedili!".format(self.pairB))
+        if winA or winB:
+            for playerA in self.pairA:
+                playerA.notifyGame(self.pointsA, self.pointsB)
+            for playerB in self.pairB:
+                playerB.notifyGame(self.pointsB, self.pointsA)
+
+            if winA:
+                print("{} su pobjedili!".format(self.pairA))
+            elif winB:
+                print("{} su pobjedili!".format(self.pairB))
 
         return self.pointsA, self.pointsB
