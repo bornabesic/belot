@@ -21,10 +21,11 @@ class BiddingPolicyNetwork:
             self.W1 = tf.get_variable(name="W1", shape=(32,self.numHiddenNeurons), initializer=tf.contrib.layers.xavier_initializer())
             self.b1 = tf.Variable(initial_value=tf.constant(0.0, shape=(self.numHiddenNeurons,), dtype=tf.float32), name="b1")
             z1 = tf.nn.xw_plus_b(self.statePlaceholder, self.W1, self.b1, name="z1")
+            h1 = tf.nn.relu(z1)
 
             self.W2 = tf.get_variable(name="W2", shape=(self.numHiddenNeurons, self.numOutputNeurons), initializer=tf.contrib.layers.xavier_initializer())
             self.b2 = tf.Variable(initial_value=tf.constant(0.0, shape=(self.numOutputNeurons,), dtype=tf.float32), name="b2")
-            z2 = tf.nn.xw_plus_b(z1, self.W2, self.b2, name="z2")
+            z2 = tf.nn.xw_plus_b(h1, self.W2, self.b2, name="z2")
 
             zeros = tf.zeros_like(self.mustMaskPlaceholder, dtype=tf.float32)
 
@@ -38,7 +39,7 @@ class BiddingPolicyNetwork:
             self.responsibleIndices = tf.range(0, batchSize)*self.numOutputNeurons + self.actionPlaceholder
             self.responsibleNeurons = tf.gather(reshapedOutput, indices=self.responsibleIndices)
 
-            self.loss = -tf.reduce_mean(tf.log(self.responsibleNeurons) * self.rewardPlaceholder)
+            self.loss = -tf.reduce_mean(tf.log(self.responsibleNeurons + 1e-9) * self.rewardPlaceholder)
 
             optimizer = tf.train.AdamOptimizer()
             self.trainOp = optimizer.minimize(self.loss)

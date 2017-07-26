@@ -21,15 +21,16 @@ pairB = Pair(playerB1, playerB2)
 
 stdout.disable()
 
-games = 1000
+games = 10000
+last=50
 wins=list()
 for i in range(games):
     game = Game(pairA, pairB)
     pointsA, pointsB = game.play()
     wins.append("A" if pointsA>pointsB else "B")
 
-last=50
-winningPercentage=wins[-last:].count("A")/last*100
-
-stdout.enable()
-print("[RL] {} - postotak pobjeda (u zadnjih {} igara): {}%".format(pairA, last, winningPercentage))
+    if i>0 and i%last==0:
+        winningPercentage=wins[-last:].count("A")/last*100
+        stdout.enable()
+        print("[RL] {} - postotak pobjeda (u zadnjih {} igara): {}%".format(pairA, last, winningPercentage))
+        stdout.disable()
