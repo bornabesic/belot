@@ -1,13 +1,12 @@
 import tensorflow as tf
 import numpy as np
-from belot import cards
+from game.belot import cards
 
 class PlayingPolicyNetwork:
 
     def __init__(self, name):
 
         self.inputSize = 360 # veličina stanja
-        # self.numHiddenNeurons = 128
         self.numOutputNeurons = 32 # broj karata
         self.regLambda = 0.5
 
@@ -42,7 +41,7 @@ class PlayingPolicyNetwork:
 
             self.loss = -tf.reduce_mean(tf.log(self.responsibleNeurons + 1e-9) * self.rewardPlaceholder) + self.regLambda * regLoss
 
-            optimizer = tf.train.AdamOptimizer(learning_rate = 1e-7)
+            optimizer = tf.train.AdamOptimizer(learning_rate = 1e-5)
             self.trainOp = optimizer.minimize(self.loss)
 
             self.index = tf.argmax(self.output, axis=1)

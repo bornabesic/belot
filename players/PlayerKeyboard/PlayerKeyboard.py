@@ -1,5 +1,5 @@
-import belot
-from interfaces import IPlayer
+import game.belot as belot
+from game.interfaces import IPlayer
 
 class PlayerKeyboard(IPlayer):
 
@@ -28,9 +28,10 @@ class PlayerKeyboard(IPlayer):
         pass
 
     def bid(self, must):
+        suits = len(belot.Suit)
         print("KARTE: ", self.cards)
         while True:
-            for i, suit in enumerate(belot.suits):
+            for i, suit in enumerate(suits):
                 print("[{}] {}".format(i+1, suit))
 
             choice = input("Broj boje (ENTER za dalje): ")
@@ -42,10 +43,10 @@ class PlayerKeyboard(IPlayer):
             except ValueError:
                 continue
 
-            if choice in range(1, len(belot.suits)+1):
+            if choice in range(1, len(suits)+1):
                 break
 
-        return belot.suits[choice-1]
+        return suits[choice-1]
 
     def playCard(self, table, legalCards):
         print("KARTE: ", self.cards)

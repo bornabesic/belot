@@ -1,7 +1,7 @@
-from random import choice
+from random import choice, choices
 
-import belot
-from interfaces import IPlayer
+import game.belot as belot
+from game.interfaces import IPlayer
 
 
 class PlayerRandom(IPlayer):
@@ -31,10 +31,13 @@ class PlayerRandom(IPlayer):
         pass
 
     def bid(self, must):
-        extra=[None]
-        if must: extra.pop()
+        suits = list(belot.Suit)
+        if must:
+            return choice(suits)
 
-        return choice(belot.suits+extra)
+        options = suits + [None]
+        weights = [1/8, 1/8, 1/8, 1/8, 1/2]
+        return choices(options, weights = weights)[0]
 
     def playCard(self, table, legalCards):
         return choice(legalCards)

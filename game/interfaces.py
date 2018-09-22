@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-import belot
+import game.belot as belot
 
 class IPlayer(metaclass=ABCMeta):
     '''
@@ -31,7 +31,8 @@ class IPlayer(metaclass=ABCMeta):
         Metoda koja uručuje karte igraču.
         '''
 
-        self.cards=sorted(cards)
+        # self.cards = sorted(cards)
+        self.cards = cards
         self.notifyCards()
 
     def declare(self):

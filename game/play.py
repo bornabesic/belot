@@ -1,4 +1,4 @@
-import belot
+import game.belot as belot
 from players.PlayerKeyboard import PlayerKeyboard
 
 
@@ -13,7 +13,7 @@ class Pair:
         if other==None:
             return False
 
-        return self.player1==other.player1 and self.player2==other.player2
+        return self.player1 == other.player1 and self.player2 == other.player2
 
     def __str__(self):
         return "{} i {}".format(self.player1, self.player2)
@@ -22,20 +22,20 @@ class Pair:
         return self.__str__()
 
     def __contains__(self, other):
-        return other==self.player1 or other==self.player2
+        return other == self.player1 or other == self.player2
 
     def __iter__(self):
         self.iter = -1
         return self
 
     def __next__(self):
-        self.iter+=1
+        self.iter += 1
 
-        if self.iter==0:
+        if self.iter == 0:
             return self.player1
-        elif self.iter==1:
+        elif self.iter == 1:
             return self.player2
-        elif self.iter>=2:
+        elif self.iter >= 2:
             raise StopIteration
 
 
@@ -129,7 +129,7 @@ class Hand:
             print("---------- {} ----------".format(self.currentPlayer))
             must = (self.playerIndex == self.game.dealerIndex)
             suit = self.currentPlayer.bid(must=must)
-            if suit in belot.suits:
+            if suit in belot.Suit:
                 print("{} zove {}".format(self.currentPlayer, suit))
                 if self.currentPlayer in pairA: biddingPair=pairA
                 elif self.currentPlayer in pairB: biddingPair=pairB
@@ -165,8 +165,27 @@ class Hand:
         maxDeclaredB2 = max(declaredValuesB2) if len(declaredValuesB2)!=0 else 0
         maxDeclaredB = max([maxDeclaredB1, maxDeclaredB2])
 
-        declareA=False
-        declareB=False
+        declareA = False
+        declareB = False
+
+        # belot ?
+        belotValue = 1001
+        belotPlayer = None
+        if belotValue in declaredValuesA1:
+            belotPlayer = playerA1
+        elif belotValue in declaredValuesA2:
+            belotPlayer = playerA2
+        elif belotValue in declaredValuesB1:
+            belotPlayer = playerB1
+        elif belotValue in declaredValuesB1:
+            belotPlayer = playerB1
+        
+        if belotPlayer is not None:
+            print("{} ima belot!".format(belotPlayer))
+            if belotPlayer in pairA:
+                return belotValue, 0
+            elif belotPlayer in pairB:
+                return 0, belotValue
 
         print("Zvanja:")
         if maxDeclaredA==0 and maxDeclaredB==0:
@@ -215,7 +234,7 @@ class Hand:
 
         # započni igru
         print()
-        while len(self.tricksA)+len(self.tricksB)<8:
+        while len(self.tricksA) + len(self.tricksB) < 8:
             if self.game.humanPlayer: input()
 
             trick=list() # štih
@@ -239,10 +258,10 @@ class Hand:
 
                 self.currentPlayer.cards.remove(card)
 
-                suit, rank = card.split(belot.separator)
-                if suit==trumpSuit:
-                    queenAndKing = (rank=="DAMA" and belot.card(suit, "KRALJ") in self.currentPlayer.cards)
-                    kingAndQueen = (rank=="KRALJ" and belot.card(suit, "DAMA") in self.currentPlayer.cards)
+                suit, rank = card
+                if suit == trumpSuit:
+                    queenAndKing = (rank == belot.Rank.DAMA and belot.Card(suit, belot.Rank.KRALJ) in self.currentPlayer.cards)
+                    kingAndQueen = (rank == belot.Rank.KRALJ and belot.Card(suit, belot.Rank.DAMA) in self.currentPlayer.cards)
                     if (queenAndKing or kingAndQueen) and self.currentPlayer.declareBela(localTable):
                         print("BELA!")
                         handValue+=belot.belaValue
@@ -286,18 +305,35 @@ class Hand:
 
             self.setCurrentPlayer(trickWinner)
 
+        # štih mač ?
+        stihMac = False
+        if len(self.tricksA) == 8:
+            print("{} su napravili štih mač!".format(pairA))
+            self.pointsA += belot.stihMacValue + self.pointsB
+            self.pointsB = 0
+            stihMac = True
+        elif len(self.tricksB) == 8:
+            print("{} su napravili štih mač!".format(pairB))
+            self.pointsB += belot.stihMacValue + self.pointsA
+            self.pointsA = 0
+            stihMac = True
+
+        if stihMac:
+            return self.pointsA, self.pointsB
+
         print("Bodovi u dijeljenju:")
         print("\t{}: {}".format(pairA, self.pointsA))
         print("\t{}: {}".format(pairB, self.pointsB))
 
-        if biddingPair==pairA and self.pointsA<handValue//2+1:
+        # prolaz ?
+        if biddingPair == pairA and self.pointsA < handValue // 2 + 1:
                 print("{} nisu prošli!".format(pairA))
-                self.pointsB+=self.pointsA
-                self.pointsA=0
-        elif biddingPair==pairB and self.pointsB<handValue//2+1:
+                self.pointsB += self.pointsA
+                self.pointsA = 0
+        elif biddingPair == pairB and self.pointsB < handValue // 2 + 1:
                 print("{} nisu prošli!".format(pairB))
-                self.pointsA+=self.pointsB
-                self.pointsB=0
+                self.pointsA += self.pointsB
+                self.pointsB = 0
 
         return self.pointsA, self.pointsB
 
