@@ -62,6 +62,34 @@ class Card:
         self.rank = rank
         self.hash = (2 ** suit) * (3 ** rank)
 
+    def __str__(self):
+
+        suitRepresentation = {
+            Suit.KARO: "KARO ♦",
+            Suit.HERC: "HERC ♥",
+            Suit.PIK:  "PIK ♠",
+            Suit.TREF: "TREF ♣"
+        }
+
+        rankRepresentation = {
+            Rank.VII:   "VII",
+            Rank.VIII:  "VIII",
+            Rank.IX:    "IX",
+            Rank.X:     "X",
+            Rank.DECKO: "DEČKO",
+            Rank.DAMA:  "DAMA",
+            Rank.KRALJ: "KRALJ",
+            Rank.AS:    "AS"
+        }
+
+        return "{} {}".format(
+            suitRepresentation[self.suit],
+            rankRepresentation[self.rank]
+        )
+
+    def __repr__(self):
+        return self.__str__()
+
     def __getitem__(self, index):
         return (self.suit, self.rank)[index]
 
