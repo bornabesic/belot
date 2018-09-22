@@ -179,7 +179,7 @@ class Hand:
             belotPlayer = playerB1
         elif belotValue in declaredValuesB1:
             belotPlayer = playerB1
-        
+
         if belotPlayer is not None:
             print("{} ima belot!".format(belotPlayer))
             if belotPlayer in pairA:
@@ -272,7 +272,7 @@ class Hand:
 
                         for player in self.game.sitting:
                             if player!=self.currentPlayer:
-                                player.notifyBela(self.currentPlayer, card) 
+                                player.notifyBela(self.currentPlayer, card)
                 print(suit, rank)
 
                 if dominantSuit==None:
