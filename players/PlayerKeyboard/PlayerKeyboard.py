@@ -28,7 +28,7 @@ class PlayerKeyboard(IPlayer):
         pass
 
     def bid(self, must):
-        suits = len(belot.Suit)
+        suits = list(belot.Suit)
         print("KARTE: ", self.cards)
         while True:
             for i, suit in enumerate(suits):
