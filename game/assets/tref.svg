@@ -1,0 +1,33 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="66px" height="121px"
+ preserveAspectRatio="xMidYMid meet">
+<path style="fill:Yellow;stroke:black;" d="M13 21 Q13 1 33 1 L33 52 L13 52 Z" />
+<path style="fill:Red;stroke:black;" d="M33 1 Q53 1 53 21 L53 52 L33 52 Z" />
+<path style="fill:#0000DF;stroke:black;" d="M13 52 L33 52 L33 62 L13 62 Z" />
+<path style="fill:#007F00;stroke:black;" d="M37 96 Q37 119 16 119 L24 110 Q25 109 27 108 Q29 107 29 102 L29 96" />
+<path style="fill:none;stroke:black;" d="M27 108 Q31.2 108 31.2 110.5 Q31.2 114 29 115.57" />
+<path style="fill:none;stroke:black;" d="M35 96 Q35 107 31 111" />
+<path style="fill:none;stroke:black;" d="M33 96 Q33 102 31.5 106" />
+<path style="fill:none;stroke:black;" d="M20 117 L26 111 Q28 109 29 111 Q29.5 112 28 113" />
+<path style="fill:#000000;stroke:black;" d="M33 52 L33 62 L53 62 L53 52 Z" />
+<path style="fill:#007F00;stroke:black;" d="M13 62 Q1 62 1 74 Q1 96 33 96 Q64 96 64 74 Q64 62 54 62 Z" />
+<path style="fill:#000000;stroke:black;" d="M33 66.5 Q28.5 66.5 28.5 71 Q28.5 77 33 87 Q37.5 77 37.5 71 Q37.5 66.5 33 66.5" />
+<path style="fill:#000000;stroke:black;" d="M21 89 Q10 80 10 74 Q10 67 15 67 Q17 67 17 71 Q17 72 16.5 73 Q16 74 16 75 Q16 80 21 89" />
+<path style="fill:#000000;stroke:black;" d="M45 89 Q56 80 56 74 Q56 67 51 67 Q49 67 49 71 Q49 72 49.5 73 Q50 74 50 75 Q50 80 45 89" />
+
+<path style="stroke:black;" d="M33 62 L33 96" />
+<path style="stroke:black;" d="M35.86 1 L35.86 96" />
+<path style="stroke:black;" d="M38.7 1.8 L38.7 96" />
+<path style="stroke:black;" d="M41.6 2.7 L41.6 95" />
+<path style="stroke:black;" d="M44.4 3 L44.4 95" />
+<path style="stroke:black;" d="M47.3 5.4 L47.3 94.6" />
+<path style="stroke:black;" d="M50.1 8.8 L50.1 93.7" />
+<path style="stroke:black;" d="M53 62 L53 92.6" />
+<path style="stroke:black;" d="M55.8 62.3 L55.8 91" />
+<path style="stroke:black;" d="M58.7 63 L58.7 88.6" />
+<path style="stroke:black;" d="M61.6 65 L61.6 84.7" />
+</svg>
+<!--Code Copyright by infanf-->

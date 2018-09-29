@@ -1,0 +1,89 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="66px" height="72px"
+ preserveAspectRatio="xMidYMid meet">
+<circle style="stroke:black;fill:#007F00;" cx="33" cy="65" r="5" />
+<path style="stroke:black;" d="M33 65 L33 70" />
+<path style="stroke:black;" d="M35 65 L35 69" />
+<path style="stroke:black;" d="M37 65 L37 68" />
+<circle style="stroke:none;fill:yellow;" cx="33" cy="33" r="32" />
+<path style="fill:red;stroke:none;" d="M2.5 23 L63.5 23 Q67 33 63.5 43 L2.5 43 Q-1 33 2.5 23" />
+<path style="fill:none;stroke:black;" d="M63 23 L63 43" />
+<path style="stroke:black;" d="M6 43 L6 50" />
+<path style="stroke:black;" d="M9 43 L9 54" />
+<path style="stroke:black;" d="M12 43 L12 54" />
+<path style="stroke:black;" d="M15 43 L15 54" />
+<path style="stroke:black;" d="M18 43 L18 54" />
+<path style="stroke:black;" d="M21 43 L21 54" />
+<path style="stroke:black;" d="M24 43 L24 54" />
+<path style="stroke:black;" d="M27 43 L27 54" />
+<path style="stroke:black;" d="M30 43 L30 54" />
+<path style="stroke:black;" d="M33 23 L33 54" />
+<path style="stroke:black;" d="M36 23 L36 54" />
+<path style="stroke:black;" d="M39 23 L39 54" />
+<path style="stroke:black;" d="M42 23 L42 54" />
+<path style="stroke:black;" d="M45 23 L45 54" />
+<path style="stroke:black;" d="M48 23 L48 54" />
+<path style="stroke:black;" d="M51 23 L51 54" />
+<path style="stroke:black;" d="M54 23 L54 54" />
+<path style="stroke:black;" d="M57 23 L57 54" />
+<path style="stroke:black;" d="M60 23 L60 50" />
+<path style="stroke:black;fill:#007F00;" d="M27 48 Q25.5 45.5 19 43 Q15 45 15 50 L29 65" />
+<path style="stroke:black;fill:#007F00;" d="M39 48 Q40.5 45.5 47 43 Q51 45 51 50 L37 65" />
+<path style="stroke:black;fill:#007F00;" d="M29 65 Q20 50 33 43 Q46 50 37 65" />
+<path style="stroke:none;fill:#007F00;" d="M3.1 43 L2.8 43 Q6.5 60 29.4 65" />
+<path style="stroke:black;fill:#007F00;" d="M29 65 Q21 52 15 50 Q8 47 2.8 43" />
+<path style="stroke:none;fill:#007F00;" d="M62.9 43 L63.2 43 Q59.5 60 36.6 65" />
+<path style="stroke:black;fill:#007F00;" d="M37 65 Q45 52 51 50 Q58 47 63.2 43" />
+<path style="stroke:black;" d="M33 43 L33 65" />
+
+<circle style="stroke:black;fill:none;" cx="33" cy="33" r="32" />
+<path style="stroke:black;" d="M33 1 L33 6.2" />
+<path style="stroke:black;" d=" M35 1.2 L35 6" />
+<path style="stroke:black;" d="M31 1.2 L31 6" />
+<path style="stroke:black;" d="M37 1.2 L37 5" />
+<path style="stroke:black;" d="M29 1.2 L29 5" />
+<path style="fill:none;stroke:black;" d="M28 1.2 Q28 6.5 33 6.5 Q38 6.5 38 1.2" />
+<path style="stroke:black;" d="M2.8 23 L63.2 23" />
+<path style="stroke:black;" d="M2.8 43 L63.2 43" />
+<path style="stroke:black;" d="M33 3 L44.5 3" />
+<path style="stroke:black;" d="M33 6 L50 6" />
+<path style="stroke:black;" d="M33 9 L54 9" />
+<path style="stroke:black;" d="M33 12 L57 12" />
+<path style="stroke:black;" d="M33 15 L59.5 15" />
+<path style="stroke:black;" d="M33 18 L61 18" />
+<path style="stroke:black;" d="M33 21 L63 21" />
+<circle style="stroke:black;fill:none;" cx="10" cy="33" r="5" />
+<path style="stroke:black;" d="M5 33 L15 33" />
+<path style="stroke:black;" d="M5.2 31 L14.8 31" />
+<path style="stroke:black;" d="M5.2 35 L14.8 35" />
+<path style="stroke:black;" d="M6.8 29 L13.2 29" />
+<path style="stroke:black;" d="M6.8 37 L13.2 37" />
+
+<circle style="stroke:black;fill:none;" cx="33" cy="33" r="5" />
+<path style="stroke:black;" d="M28 33 L38 33" />
+<path style="stroke:black;" d="M28.2 31 L37.8 31" />
+<path style="stroke:black;" d="M28.2 35 L37.8 35" />
+<path style="stroke:black;" d="M29.8 29 L36.2 29" />
+<path style="stroke:black;" d="M29.8 37 L36.2 37" />
+
+<circle style="stroke:black;fill:none;" cx="56" cy="33" r="5" />
+<path style="stroke:black;" d="M51 33 L61 33" />
+<path style="stroke:black;" d="M51.2 31 L60.8 31" />
+<path style="stroke:black;" d="M51.2 35 L60.8 35" />
+<path style="stroke:black;" d="M52.8 29 L59.2 29" />
+<path style="stroke:black;" d="M52.8 37 L59.2 37" />
+
+<path style="stroke:black;" d="M33 63 L44.5 63" />
+<path style="stroke:black;" d="M33 60 L50 60" />
+<path style="stroke:black;" d="M33 57 L54 57" />
+<path style="stroke:black;" d="M33 54 L57 54" />
+<path style="stroke:black;" d="M33 51 L59.5 51" />
+<path style="stroke:black;" d="M33 48 L61 48" />
+<path style="stroke:black;" d="M33 45 L63 45" />
+
+
+ </svg>
+<!--Code Copyright by infanf-->

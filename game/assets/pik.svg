@@ -1,0 +1,16 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="66px" height="73px"
+ preserveAspectRatio="xMidYMid meet">
+ <path style="fill:#007F00;stroke:black;" d="M35 54 Q34 64 28 68 Q25 69 24 72 Q22 69 25 66 Q33 60 30 54" />
+ <path style="fill:none;stroke:black;" d="M33.5 54 Q32.5 64 27.5 66.5" />
+ <path style="fill:none;stroke:black;" d="M25 66 C26 65 28 65 28 68" />
+ <path style="fill:none;stroke:black;" d="M25 70.4 C24.7 67 27 67 26 68" />
+ <path style="fill:#007F00;stroke:black;" d="M33 1 Q24 14 12 24 Q1 33.5 1 47 Q1 63 18 63 Q26 63 33 56 Q40 63 48 63 Q65 63 65 47 Q65 33.5 54 24 Q42 14 33 1" />
+ <path style="stroke:black;" d="M33 1 L33 56 M35 4 L35 57.8 M37 6.7 L37 59.3 M39 9 L39 60.8 M41 11.3 L41 61.5 M43 13.7 L43 62 M45 16 L45 62.5 M47 18 L47 63 M49 19.7 L49 63 M51 21.5 L51 63 M53 23.5 L53 62.7 M55 25.2 L55 62.2 M57 27 L57 61.5 M59 29.3 L59 60.3 M61 32.3 L61 58.8 M63 37 L63 55.5" />
+ <path style="fill:none;stroke:black;" d="M28 18 Q38 25 46 21 M38 18 Q28 25 20 21 M27 22.5 Q23 22.5 19 25 M39 22.5 Q43 22.5 47 25" />
+ <path transform="translate(-23,12) scale(1.7,1)" style="fill:none;stroke:black;" d="M28 18 Q38 25 46 21 M38 18 Q28 25 20 21 M27 22.5 Q23 22.5 19 25 M39 22.5 Q43 22.5 47 25" />
+ <path transform="translate(-33,24) scale(2,1)" style="fill:none;stroke:black;" d="M28 18 Q38 25 46 21 M38 18 Q28 25 20 21 M27 22.5 Q23 22.5 19 25 M39 22.5 Q43 22.5 47 25" />
+ </svg>
