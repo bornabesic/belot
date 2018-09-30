@@ -5,8 +5,11 @@ import time
 from enum import Enum, auto
 from belot import Suit, Rank, Card
 
-_background = (15, 105, 25)
-_screen_size = _screen_width, _screen_height = (800, 800)
+_screenSize = _screenWidth, _screenHeight = (800, 800)
+
+class Colors:
+    BACKGROUND = (15, 105, 25)
+    WHITE = (255, 255, 255)
 
 # Card sprites
 sprites = {
@@ -51,33 +54,80 @@ sprites = {
 class GUI(Thread):
 
     class MessageType(Enum):
-        SHOW_LEFT = auto()
-        SHOW_DOWN = auto()
-        SHOW_RIGHT = auto()
-        SHOW_UP = auto()
+        SURFACE = auto()
         EMPTY = auto()
 
-    def empty(self):
+    def clear(self):
         self.queue.put((GUI.MessageType.EMPTY,))
 
-    def showLeft(self, cardImage):
-        self.queue.put((GUI.MessageType.SHOW_LEFT, cardImage))
+    # Render cards
+    def cardLeft(self, cardImage):
+        imageWidth, imageHeight = cardImage.get_size()
+        x = _screenWidth // 4 - imageWidth // 2
+        y = _screenHeight // 2 - imageHeight // 2
+        self.queue.put((GUI.MessageType.SURFACE, cardImage, (x, y)))
 
-    def showDown(self, cardImage):
-        self.queue.put((GUI.MessageType.SHOW_DOWN, cardImage))
+    def cardDown(self, cardImage):
+        imageWidth, imageHeight = cardImage.get_size()
+        x = _screenWidth // 2 - imageWidth // 2
+        y = (_screenHeight * 3) // 4 - imageHeight // 2
+        self.queue.put((GUI.MessageType.SURFACE, cardImage, (x, y)))
 
-    def showRight(self, cardImage):
-        self.queue.put((GUI.MessageType.SHOW_RIGHT, cardImage))
+    def cardRight(self, cardImage):
+        imageWidth, imageHeight = cardImage.get_size()
+        x = (_screenWidth * 3) // 4 - imageWidth // 2
+        y = _screenHeight // 2 - imageHeight // 2
+        self.queue.put((GUI.MessageType.SURFACE, cardImage, (x, y)))
 
-    def showUp(self, cardImage):
-        self.queue.put((GUI.MessageType.SHOW_UP, cardImage))
+    def cardUp(self, cardImage):
+        imageWidth, imageHeight = cardImage.get_size()
+        x = _screenWidth // 2 - imageWidth // 2
+        y = _screenHeight // 4 - imageHeight // 2
+        self.queue.put((GUI.MessageType.SURFACE, cardImage, (x, y)))
+
+    # Render names
+    def nameLeft(self, name):
+        nameFont = pygame.font.SysFont("Comic Sans MS", 30)
+        nameSurface = nameFont.render(name, False, Colors.WHITE)
+        nameSurface = pygame.transform.rotate(nameSurface, 90)
+        surface_width, surface_height = nameSurface.get_size()
+        x = 10
+        y = _screenHeight // 2 - surface_height // 2
+        self.queue.put((GUI.MessageType.SURFACE, nameSurface, (x, y)))
+
+    def nameDown(self, name):
+        nameFont = pygame.font.SysFont("Comic Sans MS", 30)
+        nameSurface = nameFont.render(name, False, Colors.WHITE)
+        surface_width, surface_height = nameSurface.get_size()
+        x = _screenWidth // 2 - surface_width // 2
+        y = _screenHeight - surface_height - 10
+        self.queue.put((GUI.MessageType.SURFACE, nameSurface, (x, y)))
+
+    def nameRight(self, name):
+        nameFont = pygame.font.SysFont("Comic Sans MS", 30)
+        nameSurface = nameFont.render(name, False, Colors.WHITE)
+        nameSurface = pygame.transform.rotate(nameSurface, -90)
+        surface_width, surface_height = nameSurface.get_size()
+        x = _screenWidth - surface_width - 10
+        y = _screenHeight // 2 - surface_height // 2
+        self.queue.put((GUI.MessageType.SURFACE, nameSurface, (x, y)))
+
+    def nameUp(self, name):
+        nameFont = pygame.font.SysFont("Comic Sans MS", 30)
+        nameSurface = nameFont.render(name, False, Colors.WHITE)
+        surface_width, surface_height = nameSurface.get_size()
+        x = _screenWidth // 2 - surface_width // 2
+        y = 10
+        self.queue.put((GUI.MessageType.SURFACE, nameSurface, (x, y)))
 
     def run(self):
         self.queue = Queue()
 
         pygame.init()
-        self.screen = pygame.display.set_mode(_screen_size)
-        self.screen.fill(_background)
+        pygame.font.init()
+        
+        self.screen = pygame.display.set_mode(_screenSize)
+        self.screen.fill(Colors.BACKGROUND)
         while True:
             # Events
             exit = False
@@ -91,31 +141,14 @@ class GUI(Thread):
             # Message queue
             item = self.queue.get()
             messageType = item[0]
-            if messageType in (
-                GUI.MessageType.SHOW_LEFT,
-                GUI.MessageType.SHOW_DOWN,
-                GUI.MessageType.SHOW_RIGHT,
-                GUI.MessageType.SHOW_UP
-            ):
-                cardImage = item[1]
-                image_width, image_height = cardImage.get_size()
-
-                if messageType is GUI.MessageType.SHOW_LEFT:
-                    x = _screen_width // 4 - image_width // 2
-                    y = _screen_height // 2 - image_height // 2
-                elif messageType is GUI.MessageType.SHOW_DOWN:
-                    x = _screen_width // 2 - image_width // 2
-                    y = (_screen_height * 3) // 4 - image_height // 2
-                elif messageType is GUI.MessageType.SHOW_RIGHT:
-                    x = (_screen_width * 3) // 4 - image_width // 2
-                    y = _screen_height // 2 - image_height // 2
-                elif messageType is GUI.MessageType.SHOW_UP:
-                    x = _screen_width // 2 - image_width // 2
-                    y = _screen_height // 4 - image_height // 2
-
-                self.screen.blit(cardImage, (x, y))
+            # Draw a surface
+            if messageType is GUI.MessageType.SURFACE:
+                surface = item[1]
+                x, y = item[2]
+                self.screen.blit(surface, (x, y))
+            # Clear the screen
             elif messageType is GUI.MessageType.EMPTY:
-                self.screen.fill(_background)
+                self.screen.fill(Colors.BACKGROUND)
 
             pygame.display.flip()
 
@@ -123,16 +156,22 @@ if __name__ == "__main__":
     gui = GUI()
     gui.start()
 
+    gui.nameDown("Borna")
+    gui.nameUp("Mislav")
+
+    gui.nameLeft("Luka")
+    gui.nameRight("Lovro")
+
     for card in sprites:
         suit, rank = card
         if suit is Suit.HERC:
-            gui.showLeft(sprites[card])
+            gui.cardLeft(sprites[card])
         elif suit is Suit.KARO:
-            gui.showDown(sprites[card])
+            gui.cardDown(sprites[card])
         elif suit is Suit.PIK:
-            gui.showRight(sprites[card])
+            gui.cardRight(sprites[card])
         elif suit is Suit.TREF:
-            gui.showUp(sprites[card])
+            gui.cardUp(sprites[card])
         time.sleep(1)
 
-    gui.empty()
+    gui.clear()
