@@ -1,5 +1,5 @@
 from threading import Thread
-from queue import Queue
+from queue import Queue, Empty
 import pygame
 import time
 from enum import Enum, auto
@@ -56,6 +56,17 @@ class GUI(Thread):
     class MessageType(Enum):
         SURFACE = auto()
         EMPTY = auto()
+
+    def __init__(self):
+        Thread.__init__(self)
+
+        pygame.init()
+        pygame.font.init()
+
+        self.queue = Queue()
+        self.screen = pygame.display.set_mode(_screenSize)
+        pygame.display.set_caption("Belot")
+        self.screen.fill(Colors.BACKGROUND)
 
     def clear(self):
         self.queue.put((GUI.MessageType.EMPTY,))
@@ -121,36 +132,34 @@ class GUI(Thread):
         self.queue.put((GUI.MessageType.SURFACE, nameSurface, (x, y)))
 
     def run(self):
-        self.queue = Queue()
-
-        pygame.init()
-        pygame.font.init()
-        
-        self.screen = pygame.display.set_mode(_screenSize)
-        self.screen.fill(Colors.BACKGROUND)
         while True:
             # Events
-            exit = False
+            close = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    exit = True
+                    close = True
                     break
-            if exit:
+            if close:
                 break
 
             # Message queue
-            item = self.queue.get()
-            messageType = item[0]
-            # Draw a surface
-            if messageType is GUI.MessageType.SURFACE:
-                surface = item[1]
-                x, y = item[2]
-                self.screen.blit(surface, (x, y))
-            # Clear the screen
-            elif messageType is GUI.MessageType.EMPTY:
-                self.screen.fill(Colors.BACKGROUND)
+            try:
+                item = self.queue.get(block = False)
+                messageType = item[0]
+                # Draw a surface
+                if messageType is GUI.MessageType.SURFACE:
+                    surface = item[1]
+                    x, y = item[2]
+                    self.screen.blit(surface, (x, y))
+                # Clear the screen
+                elif messageType is GUI.MessageType.EMPTY:
+                    self.screen.fill(Colors.BACKGROUND)
+            except Empty:
+                pass
 
             pygame.display.flip()
+
+        pygame.display.quit()
 
 if __name__ == "__main__":
     gui = GUI()
@@ -163,6 +172,8 @@ if __name__ == "__main__":
     gui.nameRight("Lovro")
 
     for card in sprites:
+        if not gui.is_alive():
+            break
         suit, rank = card
         if suit is Suit.HERC:
             gui.cardLeft(sprites[card])
