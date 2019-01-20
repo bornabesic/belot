@@ -12,6 +12,10 @@ import game.belot as belot
 from game.belot import cards
 from .loss import PolicyGradientLoss
 
+_device = torch.device("cpu")
+if torch.cuda.is_available():
+    _device = torch.device("cuda")
+
 class BiddingPolicy(nn.Module):
 
     def __init__(self):
@@ -38,12 +42,16 @@ class BiddingPolicy(nn.Module):
         self.rewards = list()
         self.musts = list()
 
+        self.to(_device)
+
     def forward(self, state: np.ndarray, must):
         state = torch.Tensor(state)
 
         # Add batch dimension if not present
         if state.dim() == 2:
             state = state.unsqueeze(dim=0)
+
+        state = state.to(_device)
 
         if isinstance(must, bool):
             must = [must]
@@ -52,7 +60,7 @@ class BiddingPolicy(nn.Module):
         elif not isinstance(must, list):
             raise ValueError(f"'must' should be either a bool or a list! ({type(must)})")
 
-        must = torch.Tensor(must).unsqueeze(dim=1)
+        must = torch.Tensor(must).unsqueeze(dim=1).to(_device)
 
         # state -> (batch_size, in_channels, num_cards)
         # must -> (batch_size, 1)
@@ -67,7 +75,9 @@ class BiddingPolicy(nn.Module):
 
         probs = F.softmax(self.classify(out), dim=1)
         if must[0]:
-            probs = probs * torch.Tensor([1, 1, 1, 1, 0])
+            mask = torch.ones(4 + 1).to(_device)
+            mask[4] = 0
+            probs = probs * mask
 
         # Get action
         distribution = Categorical(probs) 
@@ -92,7 +102,7 @@ class BiddingPolicy(nn.Module):
             zip(self.rewards, self.musts)
         ))
 
-        rewards = torch.tensor(rewards).unsqueeze(dim=1)
+        rewards = torch.tensor(rewards).unsqueeze(dim=1).to(_device)
 
         # Optimization step
         self.optimizer.zero_grad()
@@ -120,7 +130,7 @@ class PlayingPolicy(nn.Module):
 
         self.conv418 = nn.Conv2d(in_channels, out_channels, kernel_size=(3, 4), stride=1, dilation=(1, 8))
         self.conv881 = nn.Conv2d(in_channels, out_channels, kernel_size=(3, 8), stride=8, dilation=(1, 1))
-        self.classify = nn.Linear(100, len(belot.cards)) #  KARO, HERC, PIK, TREF, dalje
+        self.classify = nn.Linear(104, len(belot.cards)) #  KARO, HERC, PIK, TREF, dalje
 
         # Optimizer
         self.optimizer = optim.SGD(self.parameters(), lr=1e-2, momentum=0.9)
@@ -133,11 +143,15 @@ class PlayingPolicy(nn.Module):
         self.log_action_probabilities = list()
         self.rewards = list()
 
+        self.to(_device)
+
     def forward(self, state: np.ndarray, bidder, trump, legalCards):
         # State
         state = torch.Tensor(state)
         if state.dim() == 3:
             state = state.unsqueeze(dim=0)
+
+        state = state.to(_device)
 
         # Bidder
         if isinstance(bidder, int):
@@ -151,13 +165,28 @@ class PlayingPolicy(nn.Module):
             t[bidderIndex] = 1
             bidder_tensors.append(t)
         
-        bidder = torch.stack(bidder_tensors, dim=0)
+        bidder = torch.stack(bidder_tensors, dim=0).to(_device)
+
+        # Trump
+        if isinstance(trump, int):
+            trump = [trump]
+        elif not isinstance(bidder, list):
+            raise ValueError(f"'trump' should be either an int or a list! ({type(must)})")
+
+        trump_tensors = list()
+        for trumpIndex in trump:
+            t = torch.zeros(len(belot.Suit))
+            t[trumpIndex] = 1
+            trump_tensors.append(t)
+        
+        trump = torch.stack(trump_tensors, dim=0).to(_device)
 
         # Legal mask
         mask = torch.zeros(1, len(belot.cards))
         for legalCard in legalCards:
             idx = belot.cards.index(legalCard)
             mask[:, idx] = 1
+        mask = mask.to(_device)
 
         # state -> 4 (players), 3 (card states), 32 (cards)
         out418 = F.relu(self.conv418(state)) # -> (batch_size, out_channels, ?, ?)
@@ -166,7 +195,8 @@ class PlayingPolicy(nn.Module):
         out = torch.cat((
             out418.view(out418.size(0), -1),
             out881.view(out881.size(0), -1),
-            bidder.view(bidder.size(0), -1)
+            bidder.view(bidder.size(0), -1),
+            trump.view(trump.size(0), -1)
         ), dim=1) # -> (batch_size, ?)
 
 
@@ -202,7 +232,7 @@ class PlayingPolicy(nn.Module):
 
             discountedRewards.append(realReward)
 
-        rewards = torch.tensor(discountedRewards, requires_grad=False).unsqueeze(dim=1)
+        rewards = torch.tensor(discountedRewards).unsqueeze(dim=1).to(_device)
 
         # Optimization step
         self.optimizer.zero_grad()
