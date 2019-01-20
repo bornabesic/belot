@@ -273,7 +273,7 @@ class Hand:
                         for player in self.game.sitting:
                             if player!=self.currentPlayer:
                                 player.notifyBela(self.currentPlayer, card)
-                print(suit, rank)
+                print(card)
 
                 if dominantSuit==None:
                     dominantSuit = suit

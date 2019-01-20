@@ -29,13 +29,13 @@ wins = list()
 for i in range(games):
     game = Game(pairA, pairB)
     pointsA, pointsB = game.play()
-    wins.append("A" if pointsA>pointsB else "B")
+    wins.append("A" if pointsA > pointsB else "B")
 
-    if i>0 and i%last==0:
+    if i > 0 and i % last == 0:
         winsA = wins[-last:].count("A")
         winningPercentage = winsA / last * 100
-        if winningPercentage >= 90:
-            break
+        # if winningPercentage >= 90:
+        #     break
         stdout.enable()
         print("[RL] {} - postotak pobjeda (u zadnjih {} igara): {}% ({} / {})".format(pairA, last, winningPercentage, winsA, last))
         stdout.disable()

@@ -1,11 +1,11 @@
 name: belot
 channels:
+  - pytorch
   - conda-forge
   - defaults
 dependencies:
-  - python=3.6
+  - python>=3.6
   - numpy
-  - tensorflow
+  - pytorch>=1.0
   - pip:
     - pygame
-

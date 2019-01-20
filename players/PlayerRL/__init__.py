@@ -1,1 +1,2 @@
-from players.PlayerRL.PlayerRL import PlayerRL
+
+from .player import PlayerRL
